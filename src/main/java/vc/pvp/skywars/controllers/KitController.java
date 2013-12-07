@@ -2,6 +2,8 @@ package vc.pvp.skywars.controllers;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sk89q.worldedit.InvalidItemException;
+import com.sk89q.worldedit.UnknownItemException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,11 +32,11 @@ public class KitController {
     private static KitController instance;
     private final Map<String, Kit> kitMap = Maps.newHashMap();
 
-    public KitController() {
+    public KitController() throws UnknownItemException, InvalidItemException {
         load();
     }
 
-    public void load() {
+    public void load() throws UnknownItemException, InvalidItemException {
         kitMap.clear();
         File dataDirectory = SkyWars.get().getDataFolder();
         File kitsDirectory = new File(dataDirectory, "kits");
@@ -186,7 +188,7 @@ public class KitController {
         private ItemStack icon;
         private List<String> lores;
 
-        public Kit(String name, FileConfiguration storage) {
+        public Kit(String name, FileConfiguration storage) throws UnknownItemException, InvalidItemException {
             this.name = name;
 
             for (String item : storage.getStringList("items")) {
@@ -224,7 +226,7 @@ public class KitController {
 
             lores.add("\247r\247eContents\247f:");
             for (ItemStack itemStack : items) {
-                lores.add("\247r\247c" + WhatIsIt.itemName(itemStack));
+                lores.add("\247r\247c" + itemStack.getType().name());
             }
         }
 

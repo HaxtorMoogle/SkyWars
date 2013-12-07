@@ -1,6 +1,9 @@
 package vc.pvp.skywars.controllers;
 
 import com.google.common.collect.Lists;
+import com.sk89q.worldedit.InvalidItemException;
+import com.sk89q.worldedit.UnknownItemException;
+import java.util.logging.Logger;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,11 +24,11 @@ public class ChestController {
     private final List<ChestItem> chestItemList = Lists.newArrayList();
     private final Random random = new Random();
 
-    public ChestController() {
+    public ChestController() throws UnknownItemException, InvalidItemException {
         load();
     }
 
-    public void load() {
+    public void load() throws UnknownItemException, InvalidItemException {
         chestItemList.clear();
         File chestFile = new File(SkyWars.get().getDataFolder(), "chest.yml");
 
@@ -89,7 +92,13 @@ public class ChestController {
 
     public static ChestController get() {
         if (chestController == null) {
-            chestController = new ChestController();
+            try {
+                chestController = new ChestController();
+            } catch (UnknownItemException ex) {
+                Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidItemException ex) {
+                Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return chestController;
