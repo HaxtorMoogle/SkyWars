@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.worldedit.InvalidItemException;
 import com.sk89q.worldedit.UnknownItemException;
+import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,11 +33,11 @@ public class KitController {
     private static KitController instance;
     private final Map<String, Kit> kitMap = Maps.newHashMap();
 
-    public KitController() throws UnknownItemException, InvalidItemException {
+    public KitController() {
         load();
     }
 
-    public void load() throws UnknownItemException, InvalidItemException {
+    public void load() {
         kitMap.clear();
         File dataDirectory = SkyWars.get().getDataFolder();
         File kitsDirectory = new File(dataDirectory, "kits");
@@ -63,7 +64,13 @@ public class KitController {
             String name = kit.getName().replace(".yml", "");
 
             if (!name.isEmpty() && !kitMap.containsKey(name)) {
-                kitMap.put(name, new Kit(name, YamlConfiguration.loadConfiguration(kit)));
+                try {
+                    kitMap.put(name, new Kit(name, YamlConfiguration.loadConfiguration(kit)));
+                } catch (UnknownItemException ex) {
+                    Logger.getLogger(KitController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidItemException ex) {
+                    Logger.getLogger(KitController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
 

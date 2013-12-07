@@ -24,11 +24,11 @@ public class ChestController {
     private final List<ChestItem> chestItemList = Lists.newArrayList();
     private final Random random = new Random();
 
-    public ChestController() throws UnknownItemException, InvalidItemException {
+    public ChestController() {
         load();
     }
 
-    public void load() throws UnknownItemException, InvalidItemException {
+    public void load() {
         chestItemList.clear();
         File chestFile = new File(SkyWars.get().getDataFolder(), "chest.yml");
 
@@ -44,7 +44,14 @@ public class ChestController {
                     String[] itemData = item.split(" ", 2);
 
                     int chance = Integer.parseInt(itemData[0]);
-                    ItemStack itemStack = ItemUtils.parseItem(itemData[1].split(" "));
+                    ItemStack itemStack = null;
+                    try {
+                        itemStack = ItemUtils.parseItem(itemData[1].split(" "));
+                    } catch (UnknownItemException ex) {
+                        Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InvalidItemException ex) {
+                        Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                     if (itemStack != null) {
                         chestItemList.add(new ChestItem(itemStack, chance));
@@ -92,13 +99,7 @@ public class ChestController {
 
     public static ChestController get() {
         if (chestController == null) {
-            try {
-                chestController = new ChestController();
-            } catch (UnknownItemException ex) {
-                Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidItemException ex) {
-                Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            chestController = new ChestController();
         }
 
         return chestController;

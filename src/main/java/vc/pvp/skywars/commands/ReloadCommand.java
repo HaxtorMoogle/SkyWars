@@ -18,20 +18,8 @@ public class ReloadCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        try {
-            ChestController.get().load();
-        } catch (UnknownItemException ex) {
-            Logger.getLogger(ReloadCommand.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidItemException ex) {
-            Logger.getLogger(ReloadCommand.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            KitController.get().load();
-        } catch (UnknownItemException ex) {
-            Logger.getLogger(ReloadCommand.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidItemException ex) {
-            Logger.getLogger(ReloadCommand.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ChestController.get().load();
+        KitController.get().load();
         SkyWars.get().reloadConfig();
         new Messaging(SkyWars.get());
 
