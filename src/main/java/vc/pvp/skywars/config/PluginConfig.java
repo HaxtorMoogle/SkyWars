@@ -6,10 +6,9 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import vc.pvp.skywars.SkyWars;
-import vc.pvp.skywars.utilities.LocationUtil;
 
 import java.util.List;
-import java.util.Locale;
+import org.bukkit.World;
 
 public class PluginConfig {
 
@@ -19,8 +18,13 @@ public class PluginConfig {
 
     static {
         storage = SkyWars.get().getConfig();
-
-        lobbySpawn = LocationUtil.getLocation(Bukkit.getWorld(storage.getString("lobby.world")), storage.getString("lobby.spawn"));
+        World w = Bukkit.getWorld(storage.getString("lobby.world"));
+        double x = storage.getDouble("lobby.x");
+        double y = storage.getDouble("lobby.y");
+        double z = storage.getDouble("lobby.z");
+        float yaw = (float) storage.getDouble("lobby.yaw");
+        float pitch = (float) storage.getDouble("lobby.pitch");
+        lobbySpawn = new Location(w, x, y, z, yaw, pitch);
         if (storage.contains("whitelisted-commands")) {
             whitelistedCommands = storage.getStringList("whitelisted-commands");
         }
@@ -33,9 +37,27 @@ public class PluginConfig {
     public static void setLobbySpawn(Location location) {
         lobbySpawn = location.clone();
         storage.set("lobby.world", lobbySpawn.getWorld().getName());
-        storage.set("lobby.spawn", String.format(Locale.US, "%.2f %.2f %.2f %.2f %.2f", location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch()));
+        storage.set("lobby.x", location.getX());
+        storage.set("lobby.y", location.getY());
+        storage.set("lobby.z", location.getZ());
+        storage.set("lobby.yaw", location.getYaw());
+        storage.set("lobby.pitch", location.getPitch());
         SkyWars.get().saveConfig();
     }
+    public static void migrateConfig() {
+        String spawn = storage.getString("lobby.spawn");
+        if (spawn != null) {
+            String[] lobbySpawn = spawn.split(" ");
+            storage.set("lobby.x", lobbySpawn[0]);
+            storage.set("lobby.y", lobbySpawn[1]);
+            storage.set("lobby.z", lobbySpawn[2]);
+            if (lobbySpawn.length == 5) {
+                storage.set("lobby.yaw", lobbySpawn[3]);
+                storage.set("lobby.pitch", lobbySpawn[4]);
+            }
+        SkyWars.get().saveConfig();
+        }
+    } 
 
     public static boolean isCommandWhitelisted(String command) {
         return whitelistedCommands.contains(command.replace("/", ""));

@@ -2,7 +2,11 @@ lobby:
   # The world of the lobby spawn
   world: world
   # The spawn coordinates (X Y Z and additionally yaw and pitch)
-  spawn: 0 64 0
+  x: 0
+  y: 64
+  z: 0
+  yaw: 0.0
+  pitch: 0.0
 score:
   # Score per kill
   per-kill: 3

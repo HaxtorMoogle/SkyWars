@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
+import vc.pvp.skywars.config.PluginConfig;
 
 public class SkyWars extends JavaPlugin {
 
@@ -45,7 +46,8 @@ public class SkyWars extends JavaPlugin {
         instance = this;
 
         deleteIslandWorlds();
-
+        
+        PluginConfig.migrateConfig();
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         reloadConfig();

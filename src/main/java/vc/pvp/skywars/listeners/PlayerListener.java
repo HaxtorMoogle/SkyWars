@@ -64,8 +64,8 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         GamePlayer gamePlayer = PlayerController.get().get(player);
 
-        if (event.getAction() == Action.PHYSICAL && event.getClickedBlock().getTypeId() == Material.STONE_PLATE.getId()) {
-            if (!gamePlayer.isPlaying() && player.getLocation().getWorld().equals(PluginConfig.getLobbySpawn().getWorld())) {
+        if (event.getAction() == Action.PHYSICAL && event.getClickedBlock().getType() == Material.STONE_PLATE) {
+            if (player.getLocation().equals(PluginConfig.getLobbySpawn())) {
                 if (SchematicController.get().size() == 0) {
                     player.sendMessage(new Messaging.MessageFormatter().format("error.no-schematics"));
                     return;
@@ -76,10 +76,6 @@ public class PlayerListener implements Listener {
             }
 
             return;
-        }
-
-        if (gamePlayer.isPlaying() && gamePlayer.getGame().getState() != GameState.PLAYING) {
-            event.setCancelled(true);
         }
     }
 
