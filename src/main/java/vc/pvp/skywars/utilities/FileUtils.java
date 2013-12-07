@@ -57,7 +57,7 @@ public class FileUtils {
                 out.close();
                 in.close();
             } else {
-                plugin.getLogger().log(Level.WARNING, "Could not save " + outFile.getName() + " to " + outFile + " because " + outFile.getName() + " already exists.");
+                plugin.getLogger().log(Level.WARNING, "Could not save {0} to {1} because {2} already exists.", new Object[]{outFile.getName(), outFile, outFile.getName()});
             }
 
         } catch (IOException ex) {

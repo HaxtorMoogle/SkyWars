@@ -65,5 +65,4 @@ public class FlatFileStorage extends DataStorage {
             System.out.println("Failed to save player " + player + ": " + ioException.getMessage());
         }
     }
-
 }

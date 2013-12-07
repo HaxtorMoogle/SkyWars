@@ -26,6 +26,7 @@ public class StatisticsUpdater extends BukkitRunnable {
         }
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.get(), new Runnable() {
+
             @Override
             public void run() {
                 statisticsController.update();

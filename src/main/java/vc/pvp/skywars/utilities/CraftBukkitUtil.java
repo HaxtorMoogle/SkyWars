@@ -21,7 +21,7 @@ public class CraftBukkitUtil {
     }
 
     public static Object getMethod(@Nonnull Object target, @Nonnull String methodName,
-                                   @Nonnull Class<?>[] paramTypes, @Nonnull Object[] params) {
+            @Nonnull Class<?>[] paramTypes, @Nonnull Object[] params) {
         Preconditions.checkNotNull(target, "Target is null");
         Preconditions.checkNotNull(methodName, "Method name is null");
 
@@ -50,18 +50,26 @@ public class CraftBukkitUtil {
         }
 
         Object playerHandle = getHandle(player);
-        if (playerHandle == null) return;
+        if (playerHandle == null) {
+            return;
+        }
 
         Object serverHandle = getHandle(Bukkit.getServer());
-        if (serverHandle == null) return;
+        if (serverHandle == null) {
+            return;
+        }
 
         serverHandle = getMethod(serverHandle, "getServer", new Class<?>[0], new Object[0]);
-        if (serverHandle == null) return;
+        if (serverHandle == null) {
+            return;
+        }
 
         Object playerListHandle = getMethod(serverHandle, "getPlayerList", new Class<?>[0], new Object[0]);
-        if (playerListHandle == null) return;
+        if (playerListHandle == null) {
+            return;
+        }
 
-        getMethod(playerListHandle, "moveToWorld", new Class<?>[] { playerHandle.getClass(), int.class, boolean.class }, new Object[] { playerHandle, 0, false });
+        getMethod(playerListHandle, "moveToWorld", new Class<?>[]{playerHandle.getClass(), int.class, boolean.class}, new Object[]{playerHandle, 0, false});
     }
 
     public static boolean isRunning() {

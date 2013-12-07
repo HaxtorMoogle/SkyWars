@@ -68,6 +68,7 @@ public class IconMenu {
             final Player player = (Player) event.getWhoClicked();
 
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+
                 @Override
                 public void run() {
                     player.closeInventory();

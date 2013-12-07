@@ -62,9 +62,9 @@ public final class Messaging {
         public MessageFormatter setVariable(String format, String value) {
             if (format != null && !format.isEmpty()) {
                 if (value == null) {
-                    variableMap.remove( format );
+                    variableMap.remove(format);
                 } else {
-                    variableMap.put( format, value );
+                    variableMap.put(format, value);
                 }
             }
             return this;

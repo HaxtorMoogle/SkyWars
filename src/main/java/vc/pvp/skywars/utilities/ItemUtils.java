@@ -8,14 +8,11 @@ import com.sk89q.worldedit.blocks.ClothColor;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import vc.pvp.skywars.SkyWars;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Wool;
 
 public class ItemUtils {
 
@@ -35,19 +32,18 @@ public class ItemUtils {
         try {
             blockId = Integer.parseInt(blockInput);
             blockType = BlockType.fromID(blockId);
-            itemStack = new ItemStack (Material.getMaterial(blockType.toString()));
-        } catch(NumberFormatException e) {
+            itemStack = new ItemStack(Material.getMaterial(blockType.toString()));
+        } catch (NumberFormatException e) {
             blockType = BlockType.lookup(blockInput);
             if (blockType == null) {
                 int t = server.resolveItem(blockInput);
                 if (t > 0) {
                     blockType = BlockType.fromID(t);
-                    itemStack = new ItemStack (Material.getMaterial(blockType.toString()));
+                    itemStack = new ItemStack(Material.getMaterial(blockType.toString()));
                     blockId = t;
                 }
-            }
-            else {
-                itemStack = new ItemStack (Material.getMaterial(blockType.toString()));
+            } else {
+                itemStack = new ItemStack(Material.getMaterial(blockType.toString()));
             }
         }
         if (itemStack == null) {
@@ -56,7 +52,7 @@ public class ItemUtils {
             if (col == null) {
                 throw new UnknownItemException(args[0]);
             }
-            itemStack = new ItemStack (Material.WOOL);
+            itemStack = new ItemStack(Material.WOOL);
             blockData = col.getID();
             itemStack.setDurability((short) blockData);
             parseDataValue = false;
@@ -76,20 +72,20 @@ public class ItemUtils {
             }
             itemStack.setDurability((short) blockData);
         }
-        
+
         if (args.length > 1 && Integer.parseInt(args[1]) > 0) {
             itemStack.setAmount(Integer.parseInt(args[1]));
         }
 
         if (args.length > 2) {
-            String[] enchAndLev = args[2].split(":",2);
+            String[] enchAndLev = args[2].split(":", 2);
             try {
                 itemStack.addEnchantment(Enchantment.getByName(enchAndLev[0]), Integer.parseInt(enchAndLev[1]));
             } catch (IllegalArgumentException e) {
                 // TODO: Handle enchantments properly
             }
         }
-    
+
         return itemStack;
     }
 

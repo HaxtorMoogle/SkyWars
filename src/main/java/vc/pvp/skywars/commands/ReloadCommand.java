@@ -1,9 +1,5 @@
 package vc.pvp.skywars.commands;
 
-import com.sk89q.worldedit.InvalidItemException;
-import com.sk89q.worldedit.UnknownItemException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

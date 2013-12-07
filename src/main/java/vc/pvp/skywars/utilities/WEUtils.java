@@ -36,6 +36,7 @@ public class WEUtils {
 
     public static void buildSchematic(final Game game, final Location origin, final CuboidClipboard schematic) {
         Bukkit.getScheduler().runTaskAsynchronously(SkyWars.get(), new Runnable() {
+
             @Override
             public void run() {
                 Vector pasteLocation = new Vector(origin.getBlockX(), origin.getBlockY(), origin.getBlockZ());
@@ -91,6 +92,7 @@ public class WEUtils {
                 }
 
                 Collections.sort(blockQueue, new Comparator<BlockBuilderEntry>() {
+
                     @Override
                     public int compare(BlockBuilderEntry o1, BlockBuilderEntry o2) {
                         return Integer.compare(o1.getLocation().getBlockY(), o2.getLocation().getBlockY());
@@ -106,6 +108,7 @@ public class WEUtils {
                 editSession.setFastMode(true);
 
                 BlockBuilder blockBuilder = new BlockBuilder(editSession, blockQueue, delayedQueue, PluginConfig.blocksPerTick(), new BlockBuilder.BuildFinishedHandler() {
+
                     @Override
                     public void onBuildFinish() {
                         game.setBuilt(true);

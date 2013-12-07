@@ -11,10 +11,10 @@ public abstract class DataStorage {
     public abstract void savePlayer(@Nonnull GamePlayer gamePlayer);
 
     public enum DataStorageType {
+
         FILE,
         SQL
     }
-
     private static DataStorage instance;
 
     public static void setInstance(DataStorageType dataStorageType) {
