@@ -45,19 +45,22 @@ public class PluginConfig {
         SkyWars.get().saveConfig();
     }
     public static void migrateConfig() {
-        String spawn = storage.getString("lobby.spawn");
-        if (spawn != null) {
-            String[] lobbySpawn = spawn.split(" ");
-            storage.set("lobby.x", lobbySpawn[0]);
-            storage.set("lobby.y", lobbySpawn[1]);
-            storage.set("lobby.z", lobbySpawn[2]);
-            if (lobbySpawn.length == 5) {
-                storage.set("lobby.yaw", lobbySpawn[3]);
-                storage.set("lobby.pitch", lobbySpawn[4]);
+        Double version = storage.getDouble("config-version");
+        if (version.isNaN()) {
+            String spawn = storage.getString("lobby.spawn");
+            if (spawn != null) {
+                String[] lobbySpawn = spawn.split(" ");
+                storage.set("lobby.x", lobbySpawn[0]);
+                storage.set("lobby.y", lobbySpawn[1]);
+                storage.set("lobby.z", lobbySpawn[2]);
+                if (lobbySpawn.length == 5) {
+                    storage.set("lobby.yaw", lobbySpawn[3]);
+                    storage.set("lobby.pitch", lobbySpawn[4]);
+                }
+                SkyWars.get().saveConfig();
             }
-        SkyWars.get().saveConfig();
         }
-    } 
+    }
 
     public static boolean isCommandWhitelisted(String command) {
         return whitelistedCommands.contains(command.replace("/", ""));

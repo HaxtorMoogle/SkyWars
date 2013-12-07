@@ -1,3 +1,4 @@
+config-version: 1.0
 lobby:
   # The world of the lobby spawn
   world: world
@@ -67,13 +68,15 @@ ignore-air: false
 # Whether to use fill chests with the contents of chest.yml. Disable this if you want to use
 # schematics it preset chest contents.
 fill-chests: true
+# Whether to fill chests that already have content.
+fill-populated-chests: false
 # Whether to use the economy of the server to figure as score
 use-economy: false
 # Whether the chat formatting should be handled by a different plugin (e.g. EssentialsChat)
-chat-handled-by-other-plugin: false
+chat-handled-by-other-plugin: true
 # Whether to clear inventory upon game join
 clear-inventory-on-join: true
 # Whether to save the inventory game join and to restore it on game leave
-save-inventory: false
+save-inventory: true
 # Commands which should be allowed to be used in a Skywars game
 whitelisted-commands: [g, global]
