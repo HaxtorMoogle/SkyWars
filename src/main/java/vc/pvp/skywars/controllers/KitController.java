@@ -1,6 +1,5 @@
 package vc.pvp.skywars.controllers;
 
-import com.flobi.WhatIsIt.WhatIsIt;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.bukkit.ChatColor;

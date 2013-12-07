@@ -1,7 +1,5 @@
 package vc.pvp.skywars.utilities;
 
-import com.earth2me.essentials.IEssentials;
-import com.earth2me.essentials.MetaItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,7 +15,6 @@ public class ItemUtils {
             return null;
         }
 
-        IEssentials essentials = SkyWars.getEssentials();
         ItemStack itemStack = null;
 
         try {
