@@ -44,6 +44,7 @@ public class PluginConfig {
         storage.set("lobby.pitch", location.getPitch());
         SkyWars.get().saveConfig();
     }
+
     public static void migrateConfig() {
         Double version = storage.getDouble("config-version");
         if (version.isNaN()) {
@@ -145,6 +146,7 @@ public class PluginConfig {
     public static boolean fillChests() {
         return storage.getBoolean("fill-chests", true);
     }
+
     public static boolean fillPopulatedChests() {
         return storage.getBoolean("fill-populated-chests", true);
     }

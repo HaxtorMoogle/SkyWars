@@ -38,11 +38,11 @@ public class InventoryListener implements Listener {
         if (!gamePlayer.getGame().isChest(location)) {
             return;
         }
-        
+
         if (!PluginConfig.fillPopulatedChests()) {
             Inventory inv = chest.getInventory();
             boolean notEmpty = false;
-            for(ItemStack itemStack : inv.getContents()) {
+            for (ItemStack itemStack : inv.getContents()) {
                 if (itemStack != null) {
                     notEmpty = true;
                     break;

@@ -28,7 +28,7 @@ public class ChestController {
         load();
     }
 
-    public void load() {
+    public final void load() {
         chestItemList.clear();
         File chestFile = new File(SkyWars.get().getDataFolder(), "chest.yml");
 
