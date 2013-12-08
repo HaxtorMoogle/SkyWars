@@ -41,16 +41,13 @@ public class ItemUtils {
             try {
                 Material mat = Material.matchMaterial(blockInput);
                 itemStack = new ItemStack(mat);
-                Bukkit.getServer().getLogger().log(Level.INFO, "Result2: " + mat.name());
             } catch (Exception e) {
                 ItemType itemType = ItemType.lookup(blockInput);
                 if (itemType != null) {
                     Material mat = Material.getMaterial(itemType.getID());
                     itemStack = new ItemStack(mat);
                     blockFound = true;
-                }
-                else {
-                    Bukkit.getServer().getLogger().log(Level.INFO, "Unable to resolve material: " + blockInput);
+                } else {
                     return null;
                 }
             }
@@ -58,7 +55,7 @@ public class ItemUtils {
         if (!blockFound) {
             try {
                 Material mat = Material.getMaterial(blockType.getID());
-                itemStack = new ItemStack(Material.getMaterial(blockType.toString()));
+                itemStack = new ItemStack(mat);
             } catch (Exception e) {
                 return null;
             }
@@ -81,10 +78,16 @@ public class ItemUtils {
 
         if (args.length > 2) {
             String[] enchAndLev = args[2].split(":", 2);
-            try {
-                itemStack.addEnchantment(Enchantment.getByName(enchAndLev[0]), Integer.parseInt(enchAndLev[1]));
-            } catch (IllegalArgumentException e) {
-                // TODO: Handle enchantments properly
+            Enchantment ench = findEnchantment(enchAndLev[0], itemStack);
+            if (ench != null) {
+                try {
+                    int level = Integer.parseInt(enchAndLev[1]);
+                    if (level >= ench.getStartLevel() && level <= ench.getMaxLevel()) {
+                        itemStack.addEnchantment(ench, level);
+                        Bukkit.getServer().getLogger().log(Level.INFO, "Added enchantment: " + ench.toString() + ", level: " + level + " on item: " + itemStack.toString());
+                    }
+                } catch (NumberFormatException e) {
+                }
             }
         }
 
@@ -113,13 +116,20 @@ public class ItemUtils {
     }
 
     @SuppressWarnings("deprecation")
-    public static Enchantment findEnchantment(ItemStack itemStack, String enchantmentInput) {
+    public static Enchantment findEnchantment(String enchantmentInput, ItemStack itemStack) {
         Enchantment enchantment = null;
+        EnchantmentUtils enchantmentType = null;
         try {
             int enchantmentID = Integer.parseInt(enchantmentInput);
             enchantment = Enchantment.getById(enchantmentID);
         } catch (NumberFormatException e) {
             enchantment = Enchantment.getByName(enchantmentInput);
+        }
+        if (enchantment == null) {
+            enchantmentType = EnchantmentUtils.lookup(enchantmentInput);
+            if (enchantmentType != null) {
+                enchantment = Enchantment.getByName(enchantmentType.toString());
+            }
         }
 
         Map<Enchantment, Integer> enchantments = itemStack.getEnchantments();
