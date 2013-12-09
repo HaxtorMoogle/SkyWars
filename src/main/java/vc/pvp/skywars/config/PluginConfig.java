@@ -14,7 +14,6 @@ import vc.pvp.skywars.utilities.LogUtils;
 
 public class PluginConfig {
 
-    public SkyWars plugin;
     private static FileConfiguration storage;
     private static Location lobbySpawn;
     private static List<String> whitelistedCommands = Lists.newArrayList();
@@ -47,22 +46,29 @@ public class PluginConfig {
         storage.set("lobby.pitch", location.getPitch());
         SkyWars.get().saveConfig();
     }
-    
+
     public static void migrateConfig() {
-        Double version = storage.getDouble("config-version");
+        Double version = storage.getDouble("config-version", 0.0);
         if (version < 1.0) {
-            LogUtils.log(Level.INFO, "Upgrading configuration file from from version " + version + " to 1.0.");    
+            LogUtils.log(Level.INFO, "Upgrading configuration file from from version " + version + " to 1.0.");
             storage.set("config-version", 1.0);
-            String spawn = storage.getString("lobby.spawn");
-            if (spawn != null) {
-                String[] lobbySpawn = spawn.split(" ");
-                storage.set("lobby.x", Double.parseDouble(lobbySpawn[0]));
-                storage.set("lobby.y", Double.parseDouble(lobbySpawn[1]));
-                storage.set("lobby.z", Double.parseDouble(lobbySpawn[2]));
-                if (lobbySpawn.length == 5) {
-                    storage.set("lobby.yaw", Double.parseDouble(lobbySpawn[3]));
-                    storage.set("lobby.pitch", Double.parseDouble(lobbySpawn[4]));
+            String oldSpawn = storage.getString("lobby.spawn", null);
+            if (oldSpawn != null) {
+                String[] spawn = oldSpawn.split(" ");
+                storage.set("lobby.x", Double.parseDouble(spawn[0]));
+                storage.set("lobby.y", Double.parseDouble(spawn[1]));
+                storage.set("lobby.z", Double.parseDouble(spawn[2]));
+                if (spawn.length >= 5) {
+                    storage.set("lobby.yaw", Double.parseDouble(spawn[3]));
+                    storage.set("lobby.pitch", Double.parseDouble(spawn[4]));
                 }
+                storage.getConfigurationSection("lobby").set("spawn", null);
+            } else {
+                storage.set("lobby.x", 0);
+                storage.set("lobby.y", 64);
+                storage.set("lobby.z", 0);
+                storage.set("lobby.yaw", 0.0);
+                storage.set("lobby.pitch", 0.0);
             }
             storage.set("fill-populated-chests", false);
         }
