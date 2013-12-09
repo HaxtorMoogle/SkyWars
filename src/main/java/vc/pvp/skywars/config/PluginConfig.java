@@ -1,7 +1,6 @@
 package vc.pvp.skywars.config;
 
 import com.google.common.collect.Lists;
-import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,8 +8,6 @@ import org.bukkit.entity.Player;
 import vc.pvp.skywars.SkyWars;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import org.bukkit.World;
 import vc.pvp.skywars.utilities.LogUtils;
