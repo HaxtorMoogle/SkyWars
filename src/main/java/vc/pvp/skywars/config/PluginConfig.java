@@ -1,6 +1,7 @@
 package vc.pvp.skywars.config;
 
 import com.google.common.collect.Lists;
+import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -8,10 +9,15 @@ import org.bukkit.entity.Player;
 import vc.pvp.skywars.SkyWars;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 import org.bukkit.World;
+import vc.pvp.skywars.utilities.LogUtils;
 
 public class PluginConfig {
 
+    public SkyWars plugin;
     private static FileConfiguration storage;
     private static Location lobbySpawn;
     private static List<String> whitelistedCommands = Lists.newArrayList();
@@ -44,23 +50,26 @@ public class PluginConfig {
         storage.set("lobby.pitch", location.getPitch());
         SkyWars.get().saveConfig();
     }
-
+    
     public static void migrateConfig() {
         Double version = storage.getDouble("config-version");
-        if (version.isNaN()) {
+        if (version < 1.0) {
+            LogUtils.log(Level.INFO, "Upgrading configuration file from from version " + version + " to 1.0.");    
+            storage.set("config-version", 1.0);
             String spawn = storage.getString("lobby.spawn");
             if (spawn != null) {
                 String[] lobbySpawn = spawn.split(" ");
-                storage.set("lobby.x", lobbySpawn[0]);
-                storage.set("lobby.y", lobbySpawn[1]);
-                storage.set("lobby.z", lobbySpawn[2]);
+                storage.set("lobby.x", Double.parseDouble(lobbySpawn[0]));
+                storage.set("lobby.y", Double.parseDouble(lobbySpawn[1]));
+                storage.set("lobby.z", Double.parseDouble(lobbySpawn[2]));
                 if (lobbySpawn.length == 5) {
-                    storage.set("lobby.yaw", lobbySpawn[3]);
-                    storage.set("lobby.pitch", lobbySpawn[4]);
+                    storage.set("lobby.yaw", Double.parseDouble(lobbySpawn[3]));
+                    storage.set("lobby.pitch", Double.parseDouble(lobbySpawn[4]));
                 }
-                SkyWars.get().saveConfig();
             }
+            storage.set("fill-populated-chests", false);
         }
+        SkyWars.get().saveConfig();
     }
 
     public static boolean isCommandWhitelisted(String command) {
