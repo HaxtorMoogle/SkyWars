@@ -37,13 +37,14 @@ public class PluginConfig {
     }
 
     public static void setLobbySpawn(Location location) {
+        storage = SkyWars.get().getConfig();
         lobbySpawn = location.clone();
         storage.set("lobby.world", lobbySpawn.getWorld().getName());
-        storage.set("lobby.x", location.getX());
-        storage.set("lobby.y", location.getY());
-        storage.set("lobby.z", location.getZ());
-        storage.set("lobby.yaw", location.getYaw());
-        storage.set("lobby.pitch", location.getPitch());
+        storage.set("lobby.x", lobbySpawn.getX());
+        storage.set("lobby.y", lobbySpawn.getY());
+        storage.set("lobby.z", lobbySpawn.getZ());
+        storage.set("lobby.yaw", lobbySpawn.getYaw());
+        storage.set("lobby.pitch", lobbySpawn.getPitch());
         SkyWars.get().saveConfig();
     }
 
