@@ -45,16 +45,13 @@ public class ChestController {
 
                     int chance = Integer.parseInt(itemData[0]);
                     ItemStack itemStack = null;
-                    try {
-                        itemStack = ItemUtils.parseItem(itemData[1].split(" "));
-                    } catch (UnknownItemException ex) {
-                        Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvalidItemException ex) {
-                        Logger.getLogger(ChestController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    itemStack = ItemUtils.parseItem(itemData[1].split(" "));
 
                     if (itemStack != null) {
                         chestItemList.add(new ChestItem(itemStack, chance));
+                    }
+                    else {
+                        LogUtils.log(Level.WARNING, getClass(), "Invalid chest item: " + itemData[1]);
                     }
                 }
             }

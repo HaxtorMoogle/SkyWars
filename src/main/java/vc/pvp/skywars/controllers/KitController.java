@@ -2,9 +2,7 @@ package vc.pvp.skywars.controllers;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sk89q.worldedit.InvalidItemException;
-import com.sk89q.worldedit.UnknownItemException;
-import java.util.logging.Logger;
+import com.sk89q.worldedit.blocks.ItemType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -64,13 +62,7 @@ public class KitController {
             String name = kit.getName().replace(".yml", "");
 
             if (!name.isEmpty() && !kitMap.containsKey(name)) {
-                try {
                     kitMap.put(name, new Kit(name, YamlConfiguration.loadConfiguration(kit)));
-                } catch (UnknownItemException ex) {
-                    Logger.getLogger(KitController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvalidItemException ex) {
-                    Logger.getLogger(KitController.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         }
 
@@ -195,7 +187,7 @@ public class KitController {
         private ItemStack icon;
         private List<String> lores;
 
-        public Kit(String name, FileConfiguration storage) throws UnknownItemException, InvalidItemException {
+        public Kit(String name, FileConfiguration storage) {
             this.name = name;
 
             for (String item : storage.getStringList("items")) {
@@ -203,6 +195,9 @@ public class KitController {
 
                 if (itemStack != null) {
                     items.add(itemStack);
+                }
+                else {
+                    LogUtils.log(Level.WARNING, getClass(), "Invalid item in kit: " + item);    
                 }
             }
 
@@ -233,7 +228,7 @@ public class KitController {
 
             lores.add("\247r\247eContents\247f:");
             for (ItemStack itemStack : items) {
-                lores.add("\247r\247c" + itemStack.getType().name());
+                lores.add("\247r\247c" + ItemType.fromID(itemStack.getTypeId()).getName());
             }
         }
 
