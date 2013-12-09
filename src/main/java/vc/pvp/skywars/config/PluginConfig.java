@@ -35,6 +35,10 @@ public class PluginConfig {
     public static Location getLobbySpawn() {
         return lobbySpawn;
     }
+    
+    public static int getLobbyRadius() {
+        return storage.getInt("lobby.radius", 2);
+    }
 
     public static void setLobbySpawn(Location location) {
         storage = SkyWars.get().getConfig();
@@ -71,6 +75,7 @@ public class PluginConfig {
                 storage.set("lobby.yaw", 0.0);
                 storage.set("lobby.pitch", 0.0);
             }
+            storage.set("lobby.radius", 2);
             storage.set("fill-populated-chests", false);
         }
         SkyWars.get().saveConfig();

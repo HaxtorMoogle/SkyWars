@@ -65,7 +65,7 @@ public class PlayerListener implements Listener {
         GamePlayer gamePlayer = PlayerController.get().get(player);
 
         if (event.getAction() == Action.PHYSICAL && event.getClickedBlock().getType() == Material.STONE_PLATE) {
-            if (player.getLocation().distance(PluginConfig.getLobbySpawn()) < 2) {
+            if (player.getLocation().distance(PluginConfig.getLobbySpawn()) < PluginConfig.getLobbyRadius()) {
                 if (SchematicController.get().size() == 0) {
                     player.sendMessage(new Messaging.MessageFormatter().format("error.no-schematics"));
                     return;

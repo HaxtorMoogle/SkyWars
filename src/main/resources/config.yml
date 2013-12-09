@@ -8,6 +8,7 @@ lobby:
   z: 0
   yaw: 0.0
   pitch: 0.0
+  radius: 2
 score:
   # Score per kill
   per-kill: 3
