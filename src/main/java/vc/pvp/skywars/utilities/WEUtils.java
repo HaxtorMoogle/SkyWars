@@ -7,6 +7,8 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import vc.pvp.skywars.SkyWars;
@@ -18,6 +20,7 @@ import vc.pvp.skywars.game.Game;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.bukkit.entity.Player;
 
 public class WEUtils {
 
@@ -123,5 +126,17 @@ public class WEUtils {
                 blockBuilder.start(40L, PluginConfig.buildInterval());
             }
         });
+    }
+    public static org.bukkit.util.Vector[] getSelection(Player player) {
+        WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+        Selection selection = worldEdit.getSelection(player);
+        if (selection == null) {
+            return null;
+        }
+        org.bukkit.util.Vector v1 = selection.getMinimumPoint().toVector();
+        org.bukkit.util.Vector v2 = selection.getMaximumPoint().toVector();
+        //return { v1, v2 };
+        org.bukkit.util.Vector[] vector = {v1, v2};
+        return vector;
     }
 }

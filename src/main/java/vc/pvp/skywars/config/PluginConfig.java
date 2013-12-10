@@ -10,6 +10,8 @@ import vc.pvp.skywars.SkyWars;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.World;
+//import org.bukkit.util.Vector;
+import org.bukkit.util.Vector;
 import vc.pvp.skywars.utilities.LogUtils;
 
 public class PluginConfig {
@@ -78,6 +80,17 @@ public class PluginConfig {
             storage.set("lobby.radius", 2);
             storage.set("fill-populated-chests", false);
         }
+        SkyWars.get().saveConfig();
+    }
+    
+    public static void setPortal(String name, Vector pos1, Vector pos2) {
+        storage = SkyWars.get().getConfig();
+        storage.set("portals." + name + ".x1", pos1.getX());
+        storage.set("portals." + name + ".z1", pos1.getZ());
+        storage.set("portals." + name + ".y1", pos1.getY());
+        storage.set("portals." + name + ".x2", pos2.getX());
+        storage.set("portals." + name + ".z2", pos2.getZ());
+        storage.set("portals." + name + ".y2", pos2.getY());
         SkyWars.get().saveConfig();
     }
 

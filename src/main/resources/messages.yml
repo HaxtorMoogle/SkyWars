@@ -31,10 +31,13 @@ error:
   no-such-kit: '&cNo such kit!'
   not-enough-score: '&cNot enough score to purchase this kit!'
   no-permission-kit: '&cNo permission to use this kit!'
+  invalid-syntax: '&cInvalid syntax specified.'
+  no-region-selected: '&cMake a selection first.'
 success:
   lobby-set: '&aLobby spawn has been set.'
   reload: '&aChests, kits and plugin.yml has been reloaded'
   enjoy-kit: '&aEnjoy your kit!'
+  portal-set: '&aA new portal was added.'
 cmd:
   available-commands: '&eAvailable commands:'
 kit:
