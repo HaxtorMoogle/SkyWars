@@ -37,7 +37,7 @@ public class PluginConfig {
     public static Location getLobbySpawn() {
         return lobbySpawn;
     }
-    
+
     public static int getLobbyRadius() {
         return storage.getInt("lobby.radius", 2);
     }
@@ -82,9 +82,10 @@ public class PluginConfig {
         }
         SkyWars.get().saveConfig();
     }
-    
-    public static void setPortal(String name, Vector pos1, Vector pos2) {
+
+    public static void setPortal(String name, String world, Vector pos1, Vector pos2) {
         storage = SkyWars.get().getConfig();
+        storage.set("portals." + name + ".world", world);
         storage.set("portals." + name + ".x1", pos1.getX());
         storage.set("portals." + name + ".z1", pos1.getZ());
         storage.set("portals." + name + ".y1", pos1.getY());
@@ -92,6 +93,29 @@ public class PluginConfig {
         storage.set("portals." + name + ".z2", pos2.getZ());
         storage.set("portals." + name + ".y2", pos2.getY());
         SkyWars.get().saveConfig();
+    }
+
+    public static Location[] getPortal(String name) {
+        storage = SkyWars.get().getConfig();
+        String path = "portals." + name + ".";
+        String worldName = storage.getString(path + "world", null);
+        if (worldName == null) {
+            return null;
+        }
+        double x1 = storage.getDouble(path + "x1");
+        double y1 = storage.getDouble(path + "y1");
+        double z1 = storage.getDouble(path + "z1");
+        double x2 = storage.getDouble(path + "x2");
+        double y2 = storage.getDouble(path + "y2");
+        double z2 = storage.getDouble(path + "z1");
+        World world = Bukkit.getWorld(worldName);
+        if (world == null) {
+            return null;
+        }
+        Location loc1 = new Location(Bukkit.getWorld(name), x1, y1, z1);
+        Location loc2 = new Location(Bukkit.getWorld(name), x2, y2, z2);
+        Location[] loc = {loc1, loc2};
+        return loc;
     }
 
     public static boolean isCommandWhitelisted(String command) {

@@ -33,6 +33,9 @@ error:
   no-permission-kit: '&cNo permission to use this kit!'
   invalid-syntax: '&cInvalid syntax specified.'
   no-region-selected: '&cMake a selection first.'
+  no-name-specified: "&cYou must specify a name for the portal."
+  portal-already-exists: "&cPortal already exists."
+  no-such-portal: "&cPortal does not exist."
 success:
   lobby-set: '&aLobby spawn has been set.'
   reload: '&aChests, kits and plugin.yml has been reloaded'
