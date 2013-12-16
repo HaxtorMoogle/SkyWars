@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
@@ -33,6 +34,10 @@ public class ItemUtils {
             if (itemType != null) {
                 mat = Material.getMaterial(itemType.getID());
             }
+        }
+        if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null) {
+            net.milkbowl.vault.item.ItemInfo itemInfo = net.milkbowl.vault.item.Items.itemByName(blockInput);
+            mat = itemInfo.material;
         }
         if (mat == null) {
             return null;
