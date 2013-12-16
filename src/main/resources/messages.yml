@@ -41,6 +41,7 @@ success:
   reload: '&aChests, kits and plugin.yml has been reloaded'
   enjoy-kit: '&aEnjoy your kit!'
   portal-set: '&aA new portal was added.'
+  portal-removed: '&aPortal successfully removed.'
 cmd:
   available-commands: '&eAvailable commands:'
 kit:

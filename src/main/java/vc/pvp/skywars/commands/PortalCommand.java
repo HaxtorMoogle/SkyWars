@@ -58,7 +58,20 @@ public class PortalCommand implements CommandExecutor {
                 sender.sendMessage(new Messaging.MessageFormatter().format("portal-set"));
                 return true;
             } else if (subCommand.equalsIgnoreCase("remove")) {
+                if (args[2] == null) {
+                    sender.sendMessage(new Messaging.MessageFormatter().format("no-name-specified"));
+                    return true;
+                }
+                Boolean result = PluginConfig.removePortal(args[2]);
+                if (result == true) {
+                    sender.sendMessage(new Messaging.MessageFormatter().format("removed-portal"));
+                    return true;
+                }
+                else {
+                    sender.sendMessage(new Messaging.MessageFormatter().format("no-such-portal"));
+                }
             } else if (subCommand.equalsIgnoreCase("list")) {
+                
             }
         }
         sender.sendMessage("Invalid syntax.");

@@ -117,6 +117,17 @@ public class PluginConfig {
         Location[] loc = {loc1, loc2};
         return loc;
     }
+    public static boolean removePortal(String name) {
+        storage = SkyWars.get().getConfig();
+        String path = "portals." + name;
+        String check = storage.getString(path);
+        if (check == null) {
+            return false;
+        }
+        storage.getConfigurationSection("portals").set(name, null);
+        SkyWars.get().saveConfig();
+        return true;
+    }
 
     public static boolean isCommandWhitelisted(String command) {
         return whitelistedCommands.contains(command.replace("/", ""));
