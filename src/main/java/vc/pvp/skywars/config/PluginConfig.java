@@ -117,6 +117,7 @@ public class PluginConfig {
         Location[] loc = {loc1, loc2};
         return loc;
     }
+
     public static boolean removePortal(String name) {
         storage = SkyWars.get().getConfig();
         String path = "portals." + name;
@@ -127,6 +128,19 @@ public class PluginConfig {
         storage.getConfigurationSection("portals").set(name, null);
         SkyWars.get().saveConfig();
         return true;
+    }
+
+    public static String listPortals() {
+        storage = SkyWars.get().getConfig();
+        List<String> portals = storage.getStringList("portals");
+        if (portals == null) {
+            return null;
+        }
+        String portalList = "";
+        for (String portal : portals) {
+            portalList += portal + ", ";
+        }
+        return portalList;
     }
 
     public static boolean isCommandWhitelisted(String command) {

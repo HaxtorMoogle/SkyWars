@@ -1,5 +1,6 @@
 package vc.pvp.skywars.commands;
 
+import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +23,7 @@ public class PortalCommand implements CommandExecutor {
             }
             String subCommand = args[1];
             if (subCommand.equalsIgnoreCase("define")) {
-                if (args[2] == null) {
+                if (args.length < 3) {
                     sender.sendMessage(new Messaging.MessageFormatter().format("no-name-specified"));
                     return true;
                 }
@@ -40,7 +41,7 @@ public class PortalCommand implements CommandExecutor {
                 sender.sendMessage(new Messaging.MessageFormatter().format("portal-set"));
                 return true;
             } else if (subCommand.equalsIgnoreCase("redefine")) {
-                if (args[2] == null) {
+                if (args.length < 3) {
                     sender.sendMessage(new Messaging.MessageFormatter().format("no-name-specified"));
                     return true;
                 }
@@ -58,7 +59,7 @@ public class PortalCommand implements CommandExecutor {
                 sender.sendMessage(new Messaging.MessageFormatter().format("portal-set"));
                 return true;
             } else if (subCommand.equalsIgnoreCase("remove")) {
-                if (args[2] == null) {
+                if (args.length < 3) {
                     sender.sendMessage(new Messaging.MessageFormatter().format("no-name-specified"));
                     return true;
                 }
@@ -69,9 +70,11 @@ public class PortalCommand implements CommandExecutor {
                 }
                 else {
                     sender.sendMessage(new Messaging.MessageFormatter().format("no-such-portal"));
+                    return true;
                 }
             } else if (subCommand.equalsIgnoreCase("list")) {
-                
+                sender.sendMessage("Portals: " + PluginConfig.listPortals());
+                return true;
             }
         }
         sender.sendMessage("Invalid syntax.");
