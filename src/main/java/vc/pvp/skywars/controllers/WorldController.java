@@ -174,6 +174,7 @@ public class WorldController {
             multiVerse.getMVWorldManager().getMVWorld(world).setAllowAnimalSpawn(false);
             multiVerse.getMVWorldManager().getMVWorld(world).setAllowMonsterSpawn(false);
             multiVerse.getMVWorldManager().getMVWorld(world).setAllowFlight(false);
+            multiVerse.getMVWorldManager().saveWorldsConfig();
         } else {
             world.setDifficulty(Difficulty.NORMAL);
             world.setSpawnFlags(false, false);

@@ -146,33 +146,42 @@ public class PlayerListener implements Listener {
             }
         }
     }
-    
+
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        GamePlayer gamePlayer = PlayerController.get().get(player);
-        if (gamePlayer.isPlaying()) {
+    public void onPlayerMove(PlayerMoveEvent e) {
+        if (e.getTo().getBlockX() == e.getFrom().getBlockX() && e.getTo().getBlockY() == e.getFrom().getBlockY() && e.getTo().getBlockZ() == e.getFrom().getBlockZ()) {
             return;
         }
-        Set<String> portals = PluginConfig.listPortals();
-        if (portals == null) {
-            return;
-        }
-        Vector vector = player.getLocation().toVector();
-        for (String portal : portals) {
-            Location[] locations = PluginConfig.getPortal(portal);
-            if (!locations[0].getWorld().toString().equals(player.getWorld().toString())) {
-                continue;
+        Player p = e.getPlayer();
+        GamePlayer gamePlayer = PlayerController.get().get(p);
+        if (!gamePlayer.isPlaying()) {
+            Set<String> portals = PluginConfig.listPortals();
+            if (portals == null) {
+                return;
             }
-            Vector vec1 = locations[0].toVector();
-            Vector vec2 = locations[1].toVector();
-            if (vector.isInAABB(vec1, vec2)) {
-                if (SchematicController.get().size() == 0) {
-                    player.sendMessage(new Messaging.MessageFormatter().format("error.no-schematics"));
-                    return;
+            int x = p.getLocation().getBlockX();
+            int y = p.getLocation().getBlockY();
+            int z = p.getLocation().getBlockZ();
+            Vector vector = new Vector(x, y, z);
+            for (String portal : portals) {
+                Location[] locations = PluginConfig.getPortal(portal);
+                if (!locations[0].getWorld().toString().equals(p.getWorld().toString())) {
+                    continue;
                 }
-                Game game = GameController.get().findEmpty();
-                game.onPlayerJoin(gamePlayer);
+                Vector vec1 = locations[0].toVector();
+                Vector vec2 = locations[1].toVector();
+                if (vector.isInAABB(vec1, vec2)) {
+                    if (SchematicController.get().size() == 0) {
+                        p.sendMessage(new Messaging.MessageFormatter().format("error.no-schematics"));
+                        return;
+                    }
+                    Game game = GameController.get().findEmpty();
+                    game.onPlayerJoin(gamePlayer);
+                }
+            }
+        } else {
+            if (p.getLocation().getBlockY() < 0) {
+                gamePlayer.getGame().onPlayerDeath(gamePlayer, null);
             }
         }
         return;
