@@ -162,25 +162,31 @@ public class WorldController {
         });
 
         World world = worldCreator.createWorld();
-        world.setDifficulty(Difficulty.NORMAL);
-        world.setSpawnFlags(false, false);
-        world.setPVP(true);
-        world.setStorm(false);
-        world.setThundering(false);
-        world.setWeatherDuration(Integer.MAX_VALUE);
         world.setAutoSave(false);
-        world.setKeepSpawnInMemory(false);
-        world.setTicksPerAnimalSpawns(0);
-        world.setTicksPerMonsterSpawns(0);
-
-        world.setGameRuleValue("doMobSpawning", "false");
-        world.setGameRuleValue("mobGriefing", "false");
-        world.setGameRuleValue("doFireTick", "false");
-        com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) 
-                SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
+        com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (multiVerse != null) {
-            multiVerse.getMVWorldManager().addWorld(world.getName(), World.Environment.NORMAL, 
+            multiVerse.getMVWorldManager().addWorld(world.getName(), World.Environment.NORMAL,
                     null, null, null, "SkyWars", false);
+            multiVerse.getMVWorldManager().getMVWorld(world).setDifficulty(Difficulty.NORMAL);
+            multiVerse.getMVWorldManager().getMVWorld(world).setPVPMode(true);
+            multiVerse.getMVWorldManager().getMVWorld(world).setEnableWeather(false);
+            multiVerse.getMVWorldManager().getMVWorld(world).setKeepSpawnInMemory(false);
+            multiVerse.getMVWorldManager().getMVWorld(world).setAllowAnimalSpawn(false);
+            multiVerse.getMVWorldManager().getMVWorld(world).setAllowMonsterSpawn(false);
+            multiVerse.getMVWorldManager().getMVWorld(world).setAllowFlight(false);
+        } else {
+            world.setDifficulty(Difficulty.NORMAL);
+            world.setSpawnFlags(false, false);
+            world.setPVP(true);
+            world.setStorm(false);
+            world.setThundering(false);
+            world.setWeatherDuration(Integer.MAX_VALUE);
+            world.setKeepSpawnInMemory(false);
+            world.setTicksPerAnimalSpawns(0);
+            world.setTicksPerMonsterSpawns(0);
+            world.setGameRuleValue("doMobSpawning", "false");
+            world.setGameRuleValue("mobGriefing", "false");
+            world.setGameRuleValue("doFireTick", "false");
         }
         return world;
     }
