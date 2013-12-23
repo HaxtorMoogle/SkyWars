@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import vc.pvp.skywars.config.PluginConfig;
 import vc.pvp.skywars.game.Game;
@@ -45,8 +43,22 @@ public class WorldController {
     }
 
     public void unload(Game game) {
-        SkyWars.get().getLogger().log(Level.INFO, "Unloading world: {0}", game.getWorld().getName());
-        SkyWars.get().getServer().unloadWorld(game.getWorld(), false);
+        if (game.getWorld() == null) {
+            return;
+        }
+        com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if (multiVerse != null) {
+            Boolean result = multiVerse.getMVWorldManager().unloadWorld(game.getWorld().getName());
+            if (result == true) {
+                return;
+            }
+        }
+        Boolean unloadResult = SkyWars.get().getServer().unloadWorld(game.getWorld(), false);
+        if (unloadResult == true) {
+            SkyWars.get().getLogger().log(Level.INFO, "World ''{0}'' was unloaded from memory.", game.getWorld().getName());
+        } else {
+            SkyWars.get().getLogger().log(Level.SEVERE, "World ''{0}'' could not be unloaded.", game.getWorld().getName());
+        }
     }
 
     public World create(Game game, CuboidClipboard schematic) {
@@ -164,7 +176,12 @@ public class WorldController {
         world.setGameRuleValue("doMobSpawning", "false");
         world.setGameRuleValue("mobGriefing", "false");
         world.setGameRuleValue("doFireTick", "false");
-
+        com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) 
+                SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if (multiVerse != null) {
+            multiVerse.getMVWorldManager().addWorld(world.getName(), World.Environment.NORMAL, 
+                    null, null, null, "SkyWars", false);
+        }
         return world;
     }
 

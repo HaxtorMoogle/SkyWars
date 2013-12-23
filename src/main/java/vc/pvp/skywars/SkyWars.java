@@ -168,12 +168,34 @@ public class SkyWars extends JavaPlugin {
                     continue;
                 }
                 World world = this.getServer().getWorld(file.getName());
+                com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
+                Boolean result = false;
                 if (world != null) {
-                    this.getLogger().log(Level.INFO, "Unloading world: {0}", world.getName());
-                    this.getServer().unloadWorld(world, false);
+                    if (multiVerse != null) {
+                        result = multiVerse.getMVWorldManager().deleteWorld(file.getName());
+                        if (result == true) {
+                            return;
+                        }
+                    }
+                    Boolean unloadResult = this.getServer().unloadWorld(world, false);
+                    if (unloadResult == true) {
+                        this.getLogger().log(Level.INFO, "World ''{0}'' was unloaded from memory.", file.getName());
+                    } else {
+                        this.getLogger().log(Level.SEVERE, "World ''{0}'' could not be unloaded.", file.getName());
+                        return;
+                    }
+                } else {
+                    if (multiVerse != null) {
+                        multiVerse.getMVWorldManager().removeWorldFromConfig(file.getName());
+                    }
                 }
-                this.getLogger().log(Level.INFO, "Deleting world folder: {0}", file.getName());
-                FileUtils.deleteFolder(file);
+                result = FileUtils.deleteFolder(file);
+                if (result == true) {
+                    this.getLogger().log(Level.INFO, "World ''{0}'' was deleted.", file.getName());
+                } else {
+                    this.getLogger().log(Level.SEVERE, "World ''{0}'' was NOT deleted.", file.getName());
+                    this.getLogger().log(Level.SEVERE, "Please check your file permissions on ''{0}''", file.getName());
+                }
             }
         }
 

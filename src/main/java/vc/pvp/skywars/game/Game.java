@@ -139,11 +139,16 @@ public class Game {
         gamePlayer.setChosenKit(false);
         gamePlayer.setSkipFallDamage(true);
         player.teleport(getSpawn(id).clone().add(0.5, 0.5, 0.5));
-        // Make sure GodMode is disabled. This covers CommandBook and WorldGuard
-        Plugin worldGuard = SkyWars.get().getServer().getPluginManager().getPlugin("WorldGuard");
-        if (worldGuard != null && (worldGuard instanceof com.sk89q.worldguard.bukkit.WorldGuardPlugin)) {
+        
+        // Make sure GodMode is disabled. This should cover CommandBook and WorldGuard
+        Plugin commandBook = SkyWars.get().getServer().getPluginManager().getPlugin("CommandBook");
+        if (commandBook != null && (commandBook instanceof com.sk89q.commandbook.CommandBook)) {
             if (com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst().getGlobalStateManager().hasGodMode(player)) {
-                com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst().getGlobalStateManager().disableGodMode(player);
+                player.removeMetadata("god", commandBook);
+                if (com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst().getGlobalStateManager().hasGodMode(player)) {
+                    player.sendMessage("Unable to disable god-mode.");
+                    gamePlayer.getGame().onPlayerLeave(gamePlayer);
+                }
             }
         }
         
