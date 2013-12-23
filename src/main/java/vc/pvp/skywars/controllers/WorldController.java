@@ -16,6 +16,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
 import vc.pvp.skywars.SkyWars;
+import vc.pvp.skywars.utilities.WorldGenerator;
 
 public class WorldController {
 
@@ -45,6 +46,9 @@ public class WorldController {
     public void unload(Game game) {
         if (game.getWorld() == null) {
             return;
+        }
+        if (freeIslands.contains(game.getIslandCoordinates())) {
+            freeIslands.remove(game.getIslandCoordinates());
         }
         com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (multiVerse != null) {
@@ -144,23 +148,7 @@ public class WorldController {
         WorldCreator worldCreator = new WorldCreator("island-" + getNextId());
         worldCreator.environment(World.Environment.NORMAL);
         worldCreator.generateStructures(false);
-        worldCreator.generator(new ChunkGenerator() {
-            @SuppressWarnings("deprecation")
-            @Override
-            public byte[] generate(World world, Random random, int x, int z) {
-                return new byte[32768];
-            }
-
-            @Override
-            public Location getFixedSpawnLocation(World world, Random random) {
-                if (!world.isChunkLoaded(0, 0)) {
-                    world.loadChunk(0, 0);
-                }
-
-                return new Location(world, 0.0D, 64.0D, 0.0D);
-            }
-        });
-
+        worldCreator.generator("SkyWars");
         World world = worldCreator.createWorld();
         world.setAutoSave(false);
         com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");

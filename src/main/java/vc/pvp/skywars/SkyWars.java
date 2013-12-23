@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import org.bukkit.World;
 import vc.pvp.skywars.config.PluginConfig;
+import vc.pvp.skywars.utilities.WorldGenerator;
 
 public class SkyWars extends JavaPlugin {
 
@@ -276,5 +277,10 @@ public class SkyWars extends JavaPlugin {
 
     public static Database getDB() {
         return instance.database;
+    }
+    
+    @Override
+    public WorldGenerator getDefaultWorldGenerator(String worldName, String id) {
+        return new WorldGenerator();
     }
 }
