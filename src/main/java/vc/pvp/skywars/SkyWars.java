@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
+import org.bukkit.World;
 import vc.pvp.skywars.config.PluginConfig;
 
 public class SkyWars extends JavaPlugin {
@@ -47,10 +48,10 @@ public class SkyWars extends JavaPlugin {
 
         deleteIslandWorlds();
         
-        PluginConfig.migrateConfig();
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         reloadConfig();
+        PluginConfig.migrateConfig();
 
         new Messaging(this);
 
@@ -166,7 +167,12 @@ public class SkyWars extends JavaPlugin {
                 if (!file.isDirectory() || !file.getName().matches("island-\\d+")) {
                     continue;
                 }
-
+                World world = this.getServer().getWorld(file.getName());
+                if (world != null) {
+                    this.getLogger().log(Level.INFO, "Unloading world: {0}", world.getName());
+                    this.getServer().unloadWorld(world, false);
+                }
+                this.getLogger().log(Level.INFO, "Deleting world folder: {0}", file.getName());
                 FileUtils.deleteFolder(file);
             }
         }

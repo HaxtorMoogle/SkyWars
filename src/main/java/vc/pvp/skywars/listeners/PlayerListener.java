@@ -13,12 +13,14 @@ import vc.pvp.skywars.controllers.GameController;
 import vc.pvp.skywars.controllers.PlayerController;
 import vc.pvp.skywars.controllers.SchematicController;
 import vc.pvp.skywars.game.Game;
-import vc.pvp.skywars.game.GameState;
 import vc.pvp.skywars.player.GamePlayer;
 import vc.pvp.skywars.utilities.Messaging;
 import vc.pvp.skywars.utilities.StringUtils;
 
 import java.util.Iterator;
+import java.util.Set;
+import org.bukkit.Location;
+import org.bukkit.util.Vector;
 
 public class PlayerListener implements Listener {
 
@@ -143,5 +145,36 @@ public class PlayerListener implements Listener {
                 player.sendMessage( new Messaging.MessageFormatter().withPrefix().format("error.cmd-disabled"));
             }
         }
+    }
+    
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        GamePlayer gamePlayer = PlayerController.get().get(player);
+        if (gamePlayer.isPlaying()) {
+            return;
+        }
+        Set<String> portals = PluginConfig.listPortals();
+        if (portals == null) {
+            return;
+        }
+        Vector vector = player.getLocation().toVector();
+        for (String portal : portals) {
+            Location[] locations = PluginConfig.getPortal(portal);
+            if (!locations[0].getWorld().toString().equals(player.getWorld().toString())) {
+                continue;
+            }
+            Vector vec1 = locations[0].toVector();
+            Vector vec2 = locations[1].toVector();
+            if (vector.isInAABB(vec1, vec2)) {
+                if (SchematicController.get().size() == 0) {
+                    player.sendMessage(new Messaging.MessageFormatter().format("error.no-schematics"));
+                    return;
+                }
+                Game game = GameController.get().findEmpty();
+                game.onPlayerJoin(gamePlayer);
+            }
+        }
+        return;
     }
 }

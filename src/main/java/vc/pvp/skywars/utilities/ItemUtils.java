@@ -53,7 +53,11 @@ public class ItemUtils {
         }
 
         if (args.length > 1 && Integer.parseInt(args[1]) > 0) {
+            try {
             itemStack.setAmount(Integer.parseInt(args[1]));
+            } catch (NumberFormatException e) {
+                itemStack.setAmount(1);
+            }
         }
 
         if (args.length > 2) {

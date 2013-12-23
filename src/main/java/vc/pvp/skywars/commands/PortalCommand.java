@@ -1,6 +1,7 @@
 package vc.pvp.skywars.commands;
 
 import java.util.List;
+import java.util.Set;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -73,7 +74,12 @@ public class PortalCommand implements CommandExecutor {
                     return true;
                 }
             } else if (subCommand.equalsIgnoreCase("list")) {
-                sender.sendMessage("Portals: " + PluginConfig.listPortals());
+                Set<String> portals = PluginConfig.listPortals();
+                String portalList = "";
+                for (String portal : portals) {
+                    portalList += portal + ", ";
+                }
+                sender.sendMessage("Portals: " + portalList);
                 return true;
             }
         }

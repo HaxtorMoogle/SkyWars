@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
+import vc.pvp.skywars.SkyWars;
 
 public class WorldController {
 
@@ -44,30 +45,8 @@ public class WorldController {
     }
 
     public void unload(Game game) {
-        int[] islandCoordinates = game.getIslandCoordinates();
-        int islandX = islandCoordinates[0];
-        int islandZ = islandCoordinates[1];
-        int islandSize = PluginConfig.getIslandSize();
-
-        int minX = (islandX * islandSize) >> 4;
-        int minZ = (islandZ * islandSize) >> 4;
-        int maxX = (islandX * islandSize + islandSize) >> 4;
-        int maxZ = (islandZ * islandSize + islandSize) >> 4;
-
-        for (int xxx = minX; xxx < maxX; xxx++) {
-            for (int zzz = minZ; zzz < maxZ; zzz++) {
-                Chunk chunk = game.getWorld().getChunkAt(xxx, zzz);
-
-                if (chunk.isLoaded()) {
-                    for (Entity entity : chunk.getEntities()) {
-                        if (!(entity instanceof Player)) {
-                            entity.remove();
-                        }
-                    }
-                    chunk.unload(false);
-                }
-            }
-        }
+        SkyWars.get().getLogger().log(Level.INFO, "Unloading world: {0}", game.getWorld().getName());
+        SkyWars.get().getServer().unloadWorld(game.getWorld(), false);
     }
 
     public World create(Game game, CuboidClipboard schematic) {

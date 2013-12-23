@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import vc.pvp.skywars.SkyWars;
 
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import org.bukkit.World;
 //import org.bukkit.util.Vector;
@@ -86,12 +87,12 @@ public class PluginConfig {
     public static void setPortal(String name, String world, Vector pos1, Vector pos2) {
         storage = SkyWars.get().getConfig();
         storage.set("portals." + name + ".world", world);
-        storage.set("portals." + name + ".x1", pos1.getX());
-        storage.set("portals." + name + ".z1", pos1.getZ());
-        storage.set("portals." + name + ".y1", pos1.getY());
-        storage.set("portals." + name + ".x2", pos2.getX());
-        storage.set("portals." + name + ".z2", pos2.getZ());
-        storage.set("portals." + name + ".y2", pos2.getY());
+        storage.set("portals." + name + ".x1", (Math.round(pos1.getX())));
+        storage.set("portals." + name + ".y1", (Math.round(pos1.getY())));
+        storage.set("portals." + name + ".z1", (Math.round(pos1.getZ())));
+        storage.set("portals." + name + ".x2", (Math.round(pos2.getX())));
+        storage.set("portals." + name + ".y2", (Math.round(pos2.getY())));
+        storage.set("portals." + name + ".z2", (Math.round(pos2.getZ())));
         SkyWars.get().saveConfig();
     }
 
@@ -107,13 +108,13 @@ public class PluginConfig {
         double z1 = storage.getDouble(path + "z1");
         double x2 = storage.getDouble(path + "x2");
         double y2 = storage.getDouble(path + "y2");
-        double z2 = storage.getDouble(path + "z1");
+        double z2 = storage.getDouble(path + "z2");
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
             return null;
         }
-        Location loc1 = new Location(Bukkit.getWorld(name), x1, y1, z1);
-        Location loc2 = new Location(Bukkit.getWorld(name), x2, y2, z2);
+        Location loc1 = new Location(world, Math.min(x1, x2), Math.min(y1, y2), Math.min(z1, z2));
+        Location loc2 = new Location(world, Math.max(x1, x2), Math.max(y1, y2), Math.max(z1, z2));
         Location[] loc = {loc1, loc2};
         return loc;
     }
@@ -130,17 +131,13 @@ public class PluginConfig {
         return true;
     }
 
-    public static String listPortals() {
+    public static Set<String> listPortals() {
         storage = SkyWars.get().getConfig();
-        List<String> portals = storage.getStringList("portals");
+        Set<String> portals = storage.getConfigurationSection("portals").getKeys(false);
         if (portals == null) {
             return null;
         }
-        String portalList = "";
-        for (String portal : portals) {
-            portalList += portal + ", ";
-        }
-        return portalList;
+        return portals;
     }
 
     public static boolean isCommandWhitelisted(String command) {
