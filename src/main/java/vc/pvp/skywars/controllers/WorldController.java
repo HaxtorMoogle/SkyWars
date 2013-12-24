@@ -50,6 +50,7 @@ public class WorldController {
         if (freeIslands.contains(game.getIslandCoordinates())) {
             freeIslands.remove(game.getIslandCoordinates());
         }
+        nextId--;
         com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (multiVerse != null) {
             Boolean result = multiVerse.getMVWorldManager().unloadWorld(game.getWorld().getName());
@@ -64,7 +65,7 @@ public class WorldController {
             SkyWars.get().getLogger().log(Level.SEVERE, "World ''{0}'' could not be unloaded.", game.getWorld().getName());
         }
     }
-
+    
     public World create(Game game, CuboidClipboard schematic) {
         if (freeIslands.size() == 0) {
             LogUtils.log(Level.INFO, getClass(), "No more free islands left. Generating new world.");
@@ -145,25 +146,32 @@ public class WorldController {
     }
 
     private World createWorld() {
-        WorldCreator worldCreator = new WorldCreator("island-" + getNextId());
-        worldCreator.environment(World.Environment.NORMAL);
-        worldCreator.generateStructures(false);
-        worldCreator.generator("SkyWars");
-        World world = worldCreator.createWorld();
-        world.setAutoSave(false);
+        String worldName = "island-" + getNextId();
+        World world = null;
         com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (multiVerse != null) {
-            multiVerse.getMVWorldManager().addWorld(world.getName(), World.Environment.NORMAL,
-                    null, null, null, "SkyWars", false);
-            multiVerse.getMVWorldManager().getMVWorld(world).setDifficulty(Difficulty.NORMAL);
-            multiVerse.getMVWorldManager().getMVWorld(world).setPVPMode(true);
-            multiVerse.getMVWorldManager().getMVWorld(world).setEnableWeather(false);
-            multiVerse.getMVWorldManager().getMVWorld(world).setKeepSpawnInMemory(false);
-            multiVerse.getMVWorldManager().getMVWorld(world).setAllowAnimalSpawn(false);
-            multiVerse.getMVWorldManager().getMVWorld(world).setAllowMonsterSpawn(false);
-            multiVerse.getMVWorldManager().getMVWorld(world).setAllowFlight(false);
-            multiVerse.getMVWorldManager().saveWorldsConfig();
+            if (multiVerse.getMVWorldManager().loadWorld(worldName)) {
+                return multiVerse.getMVWorldManager().getMVWorld(worldName).getCBWorld();
+            }
+            Boolean ret = multiVerse.getMVWorldManager().addWorld(worldName, World.Environment.NORMAL, null, null, false, "SkyWars", false);
+            if (ret) {
+                multiVerse.getMVWorldManager().getMVWorld(worldName).setDifficulty(Difficulty.NORMAL);
+                multiVerse.getMVWorldManager().getMVWorld(worldName).setPVPMode(true);
+                multiVerse.getMVWorldManager().getMVWorld(worldName).setEnableWeather(false);
+                multiVerse.getMVWorldManager().getMVWorld(worldName).setKeepSpawnInMemory(false);
+                multiVerse.getMVWorldManager().getMVWorld(worldName).setAllowAnimalSpawn(false);
+                multiVerse.getMVWorldManager().getMVWorld(worldName).setAllowMonsterSpawn(false);
+                multiVerse.getMVWorldManager().getMVWorld(worldName).setAllowFlight(false);
+                multiVerse.getMVWorldManager().saveWorldsConfig();
+                world = multiVerse.getMVWorldManager().getMVWorld(worldName).getCBWorld();
+            }
         } else {
+            WorldCreator worldCreator = new WorldCreator(worldName);
+            worldCreator.environment(World.Environment.NORMAL);
+            worldCreator.generateStructures(false);
+            worldCreator.generator("SkyWars");
+            world = worldCreator.createWorld();
+            world.setAutoSave(false);
             world.setDifficulty(Difficulty.NORMAL);
             world.setSpawnFlags(false, false);
             world.setPVP(true);

@@ -5,7 +5,6 @@ author: Wietje
 main: ${project.groupId}.${project.artifactId}.${project.name}
 depend: [WorldEdit, Vault]
 softdepend: [WorldGuard, Multiverse-Core]
-load: startup
 
 commands:
   skywars:
