@@ -156,7 +156,7 @@ public class PlayerListener implements Listener {
         GamePlayer gamePlayer = PlayerController.get().get(p);
         if (!gamePlayer.isPlaying()) {
             Set<String> portals = PluginConfig.listPortals();
-            if (portals == null) {
+            if (portals == null || portals.isEmpty()) {
                 return;
             }
             int x = p.getLocation().getBlockX();

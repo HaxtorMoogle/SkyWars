@@ -133,6 +133,9 @@ public class PluginConfig {
 
     public static Set<String> listPortals() {
         storage = SkyWars.get().getConfig();
+        if (!storage.isSet("portals")) {
+            return null;
+        }
         Set<String> portals = storage.getConfigurationSection("portals").getKeys(false);
         if (portals == null) {
             return null;
