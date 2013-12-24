@@ -143,9 +143,9 @@ public class Game {
         // Make sure GodMode is disabled. This should cover CommandBook and WorldGuard
         Plugin commandBook = SkyWars.get().getServer().getPluginManager().getPlugin("CommandBook");
         if (commandBook != null && (commandBook instanceof com.sk89q.commandbook.CommandBook)) {
-            if (com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst().getGlobalStateManager().hasGodMode(player)) {
+            if (player.hasMetadata("god")) {
                 player.removeMetadata("god", commandBook);
-                if (com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst().getGlobalStateManager().hasGodMode(player)) {
+                if (player.hasMetadata("god")) {
                     player.sendMessage("Unable to disable god-mode.");
                     gamePlayer.getGame().onPlayerLeave(gamePlayer);
                 }
@@ -218,6 +218,9 @@ public class Game {
 
         if (process && gameState == GameState.PLAYING && playerCount == 1) {
             onGameEnd(getWinner());
+        }
+        if (playerCount == 0) {
+            onGameEnd(null);
         }
     }
 
