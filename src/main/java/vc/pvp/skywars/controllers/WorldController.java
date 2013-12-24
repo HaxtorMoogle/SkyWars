@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import vc.pvp.skywars.SkyWars;
 import vc.pvp.skywars.utilities.WorldGenerator;
 
@@ -47,29 +49,22 @@ public class WorldController {
         if (game.getWorld() == null) {
             return;
         }
-        if (freeIslands.contains(game.getIslandCoordinates())) {
-            freeIslands.remove(game.getIslandCoordinates());
-        }
-        nextId--;
-        com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
-        if (multiVerse != null) {
-            Boolean result = multiVerse.getMVWorldManager().unloadWorld(game.getWorld().getName());
-            if (result == true) {
-                return;
+        GameController.get().remove(game);
+        for (Chunk c : game.getWorld().getLoadedChunks()) {
+            for (Entity e : c.getEntities()) {
+                if (e instanceof Player) {
+                    e.teleport(PluginConfig.getLobbySpawn());
+                } else {
+                    e.remove();
+                }
             }
-        }
-        Boolean unloadResult = SkyWars.get().getServer().unloadWorld(game.getWorld(), false);
-        if (unloadResult == true) {
-            SkyWars.get().getLogger().log(Level.INFO, "World ''{0}'' was unloaded from memory.", game.getWorld().getName());
-        } else {
-            SkyWars.get().getLogger().log(Level.SEVERE, "World ''{0}'' could not be unloaded.", game.getWorld().getName());
+            c.unload(false, true);
         }
     }
     
     public World create(Game game, CuboidClipboard schematic) {
         if (freeIslands.size() == 0) {
             LogUtils.log(Level.INFO, getClass(), "No more free islands left. Generating new world.");
-
             generateIslandCoordinates();
             islandWorld = createWorld();
         }

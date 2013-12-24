@@ -23,7 +23,6 @@ public class GameController {
                 return game;
             }
         }
-
         return create();
     }
 
