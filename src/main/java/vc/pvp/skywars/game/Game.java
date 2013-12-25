@@ -462,7 +462,10 @@ public class Game {
 
     private void unregisterScoreboard() {
         if (objective != null) {
-            objective.unregister();
+            try {
+                objective.unregister();
+            } catch (IllegalStateException e) {
+            }
         }
 
         if (scoreboard != null) {
