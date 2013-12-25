@@ -51,7 +51,6 @@ public class WorldController {
         }
         GameController.get().remove(game);
         int[] islandCoordinates = game.getIslandCoordinates();
-        List<Chunk> islandChunks = null;
         int islandX = islandCoordinates[0];
         int islandZ = islandCoordinates[1];
         int islandSize = PluginConfig.getIslandSize();
@@ -62,19 +61,21 @@ public class WorldController {
         int maxZ = (islandZ * islandSize + islandSize) >> 4;
         for (int xxx = minX; xxx < maxX; xxx++) {
             for (int zzz = minZ; zzz < maxZ; zzz++) {
-                islandChunks.add(game.getWorld().getChunkAt(xxx, zzz));
-            }
-        }
-        
-        for (Chunk c : islandChunks) {
-            for (Entity e : c.getEntities()) {
-                if (e instanceof Player) {
-                    e.teleport(PluginConfig.getLobbySpawn());
-                } else {
-                    e.remove();
+                Chunk chunk = game.getWorld().getChunkAt(xxx, zzz);
+                if (chunk != null) {
+                    if (!chunk.isLoaded()) {
+                        continue;
+                    }
+                    for (Entity e : chunk.getEntities()) {
+                        if (e instanceof Player) {
+                            e.teleport(PluginConfig.getLobbySpawn());
+                        } else {
+                            e.remove();
+                        }
+                    }
+                    chunk.unload(false, true);
                 }
             }
-            c.unload(false, true);
         }
     }
     
