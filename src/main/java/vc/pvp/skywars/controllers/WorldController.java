@@ -1,10 +1,10 @@
 package vc.pvp.skywars.controllers;
 
 import com.google.common.collect.Lists;
+import com.onarandombox.MultiverseCore.exceptions.PropertyDoesNotExistException;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.*;
-import org.bukkit.generator.ChunkGenerator;
 import vc.pvp.skywars.config.PluginConfig;
 import vc.pvp.skywars.game.Game;
 import vc.pvp.skywars.utilities.LogUtils;
@@ -13,12 +13,11 @@ import vc.pvp.skywars.utilities.WEUtils;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import vc.pvp.skywars.SkyWars;
-import vc.pvp.skywars.utilities.WorldGenerator;
 
 public class WorldController {
 
@@ -148,25 +147,24 @@ public class WorldController {
             if (multiVerse.getMVWorldManager().loadWorld(worldName)) {
                 return multiVerse.getMVWorldManager().getMVWorld(worldName).getCBWorld();
             }
-            Boolean ret = multiVerse.getMVWorldManager().addWorld(worldName, World.Environment.NORMAL, null, null, false, "SkyWars", false);
+            Boolean ret = multiVerse.getMVWorldManager().addWorld(worldName, World.Environment.NORMAL, null, WorldType.NORMAL, false, "SkyWars", false);
             if (ret) {
-                multiVerse.getMVWorldManager().getMVWorld(worldName).setDifficulty(Difficulty.NORMAL);
-                multiVerse.getMVWorldManager().getMVWorld(worldName).setPVPMode(true);
-                multiVerse.getMVWorldManager().getMVWorld(worldName).setEnableWeather(false);
-                multiVerse.getMVWorldManager().getMVWorld(worldName).setKeepSpawnInMemory(false);
-                multiVerse.getMVWorldManager().getMVWorld(worldName).setAllowAnimalSpawn(false);
-                multiVerse.getMVWorldManager().getMVWorld(worldName).setAllowMonsterSpawn(false);
-                multiVerse.getMVWorldManager().getMVWorld(worldName).setAllowFlight(false);
-                multiVerse.getMVWorldManager().saveWorldsConfig();
-                world = multiVerse.getMVWorldManager().getMVWorld(worldName).getCBWorld();
+                com.onarandombox.MultiverseCore.api.MultiverseWorld mvWorld = multiVerse.getMVWorldManager().getMVWorld(worldName);
+                world = mvWorld.getCBWorld();
+                mvWorld.setDifficulty(Difficulty.NORMAL.toString());;
+                mvWorld.setPVPMode(true);
+                mvWorld.setEnableWeather(false);
+                mvWorld.setKeepSpawnInMemory(false);
+                mvWorld.setAllowAnimalSpawn(false);
+                mvWorld.setAllowMonsterSpawn(false);
             }
-        } else {
+        }
+        if (world == null) {
             WorldCreator worldCreator = new WorldCreator(worldName);
             worldCreator.environment(World.Environment.NORMAL);
             worldCreator.generateStructures(false);
             worldCreator.generator("SkyWars");
             world = worldCreator.createWorld();
-            world.setAutoSave(false);
             world.setDifficulty(Difficulty.NORMAL);
             world.setSpawnFlags(false, false);
             world.setPVP(true);
@@ -176,10 +174,12 @@ public class WorldController {
             world.setKeepSpawnInMemory(false);
             world.setTicksPerAnimalSpawns(0);
             world.setTicksPerMonsterSpawns(0);
-            world.setGameRuleValue("doMobSpawning", "false");
-            world.setGameRuleValue("mobGriefing", "false");
-            world.setGameRuleValue("doFireTick", "false");
         }
+        world.setAutoSave(false);
+        world.setGameRuleValue("doMobSpawning", "false");
+        world.setGameRuleValue("mobGriefing", "false");
+        world.setGameRuleValue("doFireTick", "false");
+
         return world;
     }
 
