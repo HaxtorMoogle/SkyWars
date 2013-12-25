@@ -1,7 +1,6 @@
 package vc.pvp.skywars.controllers;
 
 import com.google.common.collect.Lists;
-import com.onarandombox.MultiverseCore.exceptions.PropertyDoesNotExistException;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.*;
@@ -11,10 +10,10 @@ import vc.pvp.skywars.utilities.LogUtils;
 import vc.pvp.skywars.utilities.WEUtils;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import vc.pvp.skywars.SkyWars;
@@ -49,7 +48,23 @@ public class WorldController {
             return;
         }
         GameController.get().remove(game);
-        for (Chunk c : game.getWorld().getLoadedChunks()) {
+        int[] islandCoordinates = game.getIslandCoordinates();
+        List<Chunk> islandChunks = null;
+        int islandX = islandCoordinates[0];
+        int islandZ = islandCoordinates[1];
+        int islandSize = PluginConfig.getIslandSize();
+        
+        int minX = (islandX * islandSize) >> 4;
+        int minZ = (islandZ * islandSize) >> 4;
+        int maxX = (islandX * islandSize + islandSize) >> 4;
+        int maxZ = (islandZ * islandSize + islandSize) >> 4;
+        for (int xxx = minX; xxx < maxX; xxx++) {
+            for (int zzz = minZ; zzz < maxZ; zzz++) {
+                islandChunks.add(game.getWorld().getChunkAt(xxx, zzz));
+            }
+        }
+        
+        for (Chunk c : islandChunks) {
             for (Entity e : c.getEntities()) {
                 if (e instanceof Player) {
                     e.teleport(PluginConfig.getLobbySpawn());
