@@ -39,6 +39,7 @@ public class SchematicController {
             return;
         }
 
+        int schematicSize = 0;
         for (File schematic : schematics) {
             if (!schematic.getName().endsWith(".schematic")) {
                 continue;
@@ -54,15 +55,15 @@ public class SchematicController {
                 LogUtils.log(Level.INFO, getClass(), "Could not load schematic %s: Unable to determine schematic format", schematic.getName());
                 continue;
             }
-
             try {
                 registerSchematic(schematic.getName().replace(".schematic", ""), schematicFormat.load(schematic));
+                schematicSize++;
             } catch (Exception e) {
                 LogUtils.log(Level.INFO, getClass(), "Could not load schematic %s: %s", schematic.getName(), e.getMessage());
             }
         }
 
-        LogUtils.log(Level.INFO, getClass(), "Registered %d schematics ...", schematicMap.size());
+        LogUtils.log(Level.INFO, getClass(), "Registered %d schematics ...", schematicSize);
     }
 
     public void registerSchematic(final String name, final CuboidClipboard schematic) {
