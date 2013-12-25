@@ -1,6 +1,8 @@
 package vc.pvp.skywars.controllers;
 
 import com.google.common.collect.Lists;
+import com.onarandombox.MultiverseCore.api.MultiverseWorld;
+import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.*;
@@ -133,40 +135,43 @@ public class WorldController {
         int x = location.getBlockX();
         int y = location.getBlockY();
         int z = location.getBlockZ();
+        
+        Material spawnHouseMat = Material.GLASS;
 
-        world.getBlockAt(x, y - 1, z).setTypeId(20, false);
-        world.getBlockAt(x, y + 3, z).setTypeId(20, false);
+        world.getBlockAt(x, y - 1, z).setType(spawnHouseMat);
+        world.getBlockAt(x, y + 3, z).setType(spawnHouseMat);
 
-        world.getBlockAt(x + 1, y, z).setTypeId(20, false);
-        world.getBlockAt(x + 1, y + 1, z).setTypeId(20, false);
-        world.getBlockAt(x + 1, y + 2, z).setTypeId(20, false);
+        world.getBlockAt(x + 1, y, z).setType(spawnHouseMat);
+        world.getBlockAt(x + 1, y + 1, z).setType(spawnHouseMat);
+        world.getBlockAt(x + 1, y + 2, z).setType(spawnHouseMat);
 
-        world.getBlockAt(x - 1, y, z).setTypeId(20, false);
-        world.getBlockAt(x - 1, y + 1, z).setTypeId(20, false);
-        world.getBlockAt(x - 1, y + 2, z).setTypeId(20, false);
+        world.getBlockAt(x - 1, y, z).setType(spawnHouseMat);
+        world.getBlockAt(x - 1, y + 1, z).setType(spawnHouseMat);
+        world.getBlockAt(x - 1, y + 2, z).setType(spawnHouseMat);
 
-        world.getBlockAt(x, y, z + 1).setTypeId(20, false);
-        world.getBlockAt(x, y + 1, z + 1).setTypeId(20, false);
-        world.getBlockAt(x, y + 2, z + 1).setTypeId(20, false);
+        world.getBlockAt(x, y, z + 1).setType(spawnHouseMat);
+        world.getBlockAt(x, y + 1, z + 1).setType(spawnHouseMat);
+        world.getBlockAt(x, y + 2, z + 1).setType(spawnHouseMat);
 
-        world.getBlockAt(x, y, z - 1).setTypeId(20, false);
-        world.getBlockAt(x, y + 1, z - 1).setTypeId(20, false);
-        world.getBlockAt(x, y + 2, z - 1).setTypeId(20, false);
+        world.getBlockAt(x, y, z - 1).setType(spawnHouseMat);
+        world.getBlockAt(x, y + 1, z - 1).setType(spawnHouseMat);
+        world.getBlockAt(x, y + 2, z - 1).setType(spawnHouseMat);
     }
 
     private World createWorld() {
         String worldName = "island-" + getNextId();
         World world = null;
-        com.onarandombox.MultiverseCore.MultiverseCore multiVerse = (com.onarandombox.MultiverseCore.MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
-        if (multiVerse != null) {
-            if (multiVerse.getMVWorldManager().loadWorld(worldName)) {
-                return multiVerse.getMVWorldManager().getMVWorld(worldName).getCBWorld();
+        MultiverseCore mV = (MultiverseCore) SkyWars.get().getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if (mV != null) {
+            if (mV.getMVWorldManager().loadWorld(worldName)) {
+                return mV.getMVWorldManager().getMVWorld(worldName).getCBWorld();
             }
-            Boolean ret = multiVerse.getMVWorldManager().addWorld(worldName, World.Environment.NORMAL, null, WorldType.NORMAL, false, "SkyWars", false);
+            Boolean ret = mV.getMVWorldManager().
+                    addWorld(worldName, World.Environment.NORMAL, null, WorldType.NORMAL, false, "SkyWars", false);
             if (ret) {
-                com.onarandombox.MultiverseCore.api.MultiverseWorld mvWorld = multiVerse.getMVWorldManager().getMVWorld(worldName);
+                MultiverseWorld mvWorld = mV.getMVWorldManager().getMVWorld(worldName);
                 world = mvWorld.getCBWorld();
-                mvWorld.setDifficulty(Difficulty.NORMAL.toString());;
+                mvWorld.setDifficulty(Difficulty.NORMAL.toString());
                 mvWorld.setPVPMode(true);
                 mvWorld.setEnableWeather(false);
                 mvWorld.setKeepSpawnInMemory(false);
@@ -191,8 +196,6 @@ public class WorldController {
             world.setTicksPerMonsterSpawns(0);
         }
         world.setAutoSave(false);
-        world.setGameRuleValue("doMobSpawning", "false");
-        world.setGameRuleValue("mobGriefing", "false");
         world.setGameRuleValue("doFireTick", "false");
 
         return world;
