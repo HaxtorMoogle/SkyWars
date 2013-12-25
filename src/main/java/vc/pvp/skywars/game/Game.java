@@ -142,9 +142,11 @@ public class Game {
         
         // Make sure GodMode is disabled. This should cover CommandBook and WorldGuard
         Plugin commandBook = SkyWars.get().getServer().getPluginManager().getPlugin("CommandBook");
+        Plugin worldGuard = SkyWars.get().getServer().getPluginManager().getPlugin("WorldGuard");
         if (commandBook != null && (commandBook instanceof com.sk89q.commandbook.CommandBook)) {
             if (player.hasMetadata("god")) {
                 player.removeMetadata("god", commandBook);
+                player.removeMetadata("god", worldGuard);
                 if (player.hasMetadata("god")) {
                     player.sendMessage("Unable to disable god-mode.");
                     gamePlayer.getGame().onPlayerLeave(gamePlayer);
