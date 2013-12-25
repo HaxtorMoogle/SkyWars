@@ -114,7 +114,7 @@ public class Game {
                 .setVariable("slots", String.valueOf(slots))
                 .format("game.join"));
 
-        if (getMinimumPlayers() - playerCount != 0) {
+        if (getMinimumPlayers() - playerCount > 0) {
             sendMessage(new Messaging.MessageFormatter()
                     .withPrefix()
                     .setVariable("amount", String.valueOf(getMinimumPlayers() - playerCount))
