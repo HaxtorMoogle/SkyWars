@@ -92,10 +92,10 @@ public class WorldController {
         int islandX = islandCoordinates[0];
         int islandZ = islandCoordinates[1];
         int islandSize = PluginConfig.getIslandSize();
-
+        
         int midX = islandX * islandSize + islandSize / 2;
         int midZ = islandZ * islandSize + islandSize / 2;
-
+        
         if (PluginConfig.buildSchematic()) {
             WEUtils.buildSchematic(game, new Location(islandWorld, midX, PASTE_HEIGHT, midZ), schematic);
         } else {

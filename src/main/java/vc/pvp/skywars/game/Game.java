@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
 
 @SuppressWarnings("deprecation")
 public class Game {
@@ -97,6 +98,23 @@ public class Game {
 
     public int[] getIslandCoordinates() {
         return islandCoordinates;
+    }
+    
+    public Vector getMinVector() {
+        int islandX = islandCoordinates[0];
+        int islandZ = islandCoordinates[1];
+        int islandSize = PluginConfig.getIslandSize();
+        int midX = islandX * islandSize + islandSize / 2;
+        int midZ = islandZ * islandSize + islandSize / 2;
+        int minX = midX + schematic.getOffset().getBlockX() - 1;
+        int minZ = midZ + schematic.getOffset().getBlockZ() - 1;
+        return new Vector(minX, 0, minZ);
+    }
+    
+    public Vector getMaxVector() {
+        int maxX = getMinVector().getBlockX() + schematic.getWidth() + 2;
+        int maxZ = getMinVector().getBlockZ() + schematic.getLength() + 2;
+        return new Vector(maxX, 256, maxZ);
     }
 
     public void onPlayerJoin(GamePlayer gamePlayer) {

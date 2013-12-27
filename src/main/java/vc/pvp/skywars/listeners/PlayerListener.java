@@ -182,8 +182,13 @@ public class PlayerListener implements Listener {
                 }
             }
         } else {
+            Vector minVec = gamePlayer.getGame().getMinVector();
+            Vector maxVec = gamePlayer.getGame().getMaxVector();
             if (p.getLocation().getBlockY() < 0) {
                 gamePlayer.getGame().onPlayerDeath(gamePlayer, null);
+            } else if (!to.toVector().isInAABB(minVec, maxVec)) {
+                p.sendMessage("Not in game area!");
+                p.teleport(from);
             }
         }
         return;
